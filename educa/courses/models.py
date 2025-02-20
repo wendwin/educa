@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from .fields import OrderField
+from django.template.loader import render_to_string
 
 class Subject(models.Model):
     title = models.CharField(max_length=200)
@@ -66,6 +67,12 @@ class ItemBase(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def render(self):
+        return render_to_string(
+            f'courses/content/{self._meta.model_name}.html',
+            {'item': self}
+        )
     
 class Text(ItemBase):
     content = models.TextField()
